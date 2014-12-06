@@ -1,0 +1,155 @@
+.battle-screen {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		to bottom,
+		#b0da98,
+		#b0da98 50%,
+		#d2fdb8 50%,
+		#d2fdb8
+	);
+	background-size: 100% 4px;
+	position: absolute;
+}
+
+.battle-screen .pokemon-stats,
+.battle-screen .opponent-stats {
+	width: 193px;
+	height: 54px;
+	border: 1px solid #444;
+	background: #fbf6d6;
+	border-radius: 12px 4px;
+	position: absolute;
+	top: 34px;
+	left: 26px;
+	/*opacity: 0.5;*/
+	z-index: 1;
+}
+
+.battle-screen .pokemon-stats {
+	top: 155px;
+	left: auto;
+	right: 26px;
+	height: 70px;
+}
+
+.battle-screen .opponent-notch,
+.battle-screen .pokemon-notch {
+	position: absolute;
+	width: 174px;
+	background: #444;
+	height: 20px;
+	top: 74px;
+	left: 45px;
+}
+
+.battle-screen .pokemon-notch {
+	width: 180px;
+	height: 40px;
+	top: 192px;
+	left: auto;
+	right: 18px;
+	/*opacity: 0.5;*/
+	border-radius: 0 0 14px 0;
+}
+
+.battle-screen .pokemon-notch:before {
+	content: "";
+	position: absolute;
+	right: 100%;
+	top: 0;
+	width: 0;
+	height: 0;
+	border: 20px solid #444;
+	border-top-color: transparent;
+	border-left-color: transparent;
+}
+
+.battle-screen .opponent-notch:after,
+.battle-screen .opponent-notch:before {
+	content: "";
+	position: absolute;
+	right: 100%;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border: 8px solid #444;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+}
+
+.battle-screen .opponent-notch:after {
+	right: auto;
+	left: 100%;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border: 10px solid #444;
+	border-top-color: transparent;
+	border-right-color: transparent;
+}
+
+.battle-screen h3 {
+	margin: 0;
+	text-transform: uppercase;
+	font-size: 15px;
+	margin: 10px 0 0 8px;
+	float: left;
+}
+
+.battle-screen .level {
+	font-size: 15px;
+	float: right;
+	margin: 10px 8px 0 0;
+}
+
+.battle-screen .health {
+	font-size: 17px;
+	float: right;
+	margin: 24px 8px 0;
+	font-weight: normal;
+	color: #444;
+}
+
+.battle-screen .level:before {
+	content: "Lv";
+	font-size: 10px;
+}
+
+.battle-screen .platform {
+	perspective: 1000px;
+	width: 245px;
+	height: 245px;
+	position: absolute;
+	left: 10px;
+	top: 110px;
+}
+
+.battle-screen .platform.opponent {
+	left: auto;
+	right: 30px;
+	top: 0px;
+}
+
+
+.battle-screen .platform:before {
+	content: "";
+	display: block;
+	width: 245px;
+	height: 245px;
+	background: #7dcf83;
+	border: 12px solid #9ae387;
+	border-radius: 100%;
+
+	transform-style: preserve-3d;
+	transform: rotateX(76deg) rotateY(0);
+	/*transform: skew();*/
+}
+
+.battle-screen .platform img {
+	position: absolute;
+	left: 20%;
+	top: 0;
+	width: 80%;
+}
+
