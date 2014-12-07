@@ -1,0 +1,20 @@
+<div class="stats-wrapper fadeIn">
+		<div class="pokemon-stats">
+		<h3><%= pokemon.name() %></h3>
+		<span class="level"><%= pokemon.get("level") %></span>
+
+		<div class="health-bar">
+			<div class="inner-health" style="width: <%= pokemon.percentAlive() %>%;"></div>
+		</div>
+		<span class="health"><%= pokemon.get("health") %>/<%= pokemon.get("maxHealth") %></span>
+
+		<div class="experience-bar">
+			<div class="inner-experience" style="width: 10%"></div>
+		</div>
+	</div>
+	<div class="pokemon-notch"></div>
+</div>
+
+<div class="platform">
+	<img src="assets/images/pokemon/back/<%= pokemon.get("number") %>.png">
+</div>

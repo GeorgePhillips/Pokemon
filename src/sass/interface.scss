@@ -1,0 +1,266 @@
+#game {
+	text-align: center;
+	* {
+		box-sizing: border-box;
+		transition: all 0.4s ease;
+	}
+}
+
+canvas {
+	display: block;
+}
+
+.messages {
+	text-align: left;
+	position: absolute;
+	bottom: 0;
+	height: 90px;
+	background: #fff;
+	border-top: 1px solid #fff;
+	width: 100%;
+	padding: 15px;
+	line-height: 2;
+	z-index: 3;
+
+	&:before,
+	&:after {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		margin-top: -4px; 
+		height: 14px;
+		border-radius: 3px 20px 0 0;
+		width: 30%;
+		background: #fff;
+	}
+
+	&:after {
+		border-radius: 20px 3px 0 0;
+		right: 0;
+		left: auto;
+	}
+
+	.control-wrapper {
+		transform: translateX(0);
+	}
+
+	.alternate-controls-active {
+		transform: translateX(-500px);
+	}
+
+	.controls {
+		float: right;
+		width: 50%;
+		height: 90px;
+		margin: -11px;
+	}
+
+
+	.controls.large-controls {
+		width: 90%;
+		margin: -11px 0;
+	}
+
+	.alternative-controls,
+	.main-controls {
+		position: absolute;
+		top: 0;
+		left: 15px;
+	}	
+
+	.alternative-controls {
+		transform: translateX(500px);
+	}
+
+	.pokemon {
+		line-height: 26px;
+		font-size: 0.8em;
+	}
+
+	a {
+		float: left;
+		width: 50%;
+		height: 30px;
+		line-height: 37px;
+		margin: 5px 0;
+		padding: 0 10px;
+		display: block;
+		text-decoration: none;
+		color: #666;
+		border-radius: 4px;
+		position: relative;
+		font-size: 0.9em;
+
+		&:hover {
+			color: #222;
+		}
+
+		&:active,
+		&:focus {
+			color: #222;
+			outline: 0;
+		}
+
+		&:before {
+			content: "";
+			border: 6px solid transparent;
+			width: 0;
+			height: 0;
+			border-left-color: #eee;
+			border-right: 0;
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			margin: -6px 0 0 -2px;
+		}
+
+		&:focus:before {
+			border-left-color: #222;
+		}
+
+		&:active:before {
+			margin: -6px 0 0 -1px;
+			border-left-color: #222;
+		}
+	}
+
+	.back {
+		float: left;
+		width: 10%;
+		margin: -11px 0;
+
+		a {
+			width: 100%;
+			text-align: center;
+			line-height: 30px;
+
+			&:before {
+				display: none;
+			}
+		}
+	}
+}
+
+.health-bar {
+	position: absolute;
+	top: 32px;
+	right: 8px;
+	height: 10px;
+	border-radius: 6px;
+	width: 82%;
+	border: 2px solid #444;
+	border-left-width: 20px;
+
+	&:before {
+		content: "HP";
+		float: left;
+		color: #C66666;
+		font-size: 7px;
+		position: relative;
+		right: 16px;
+		top: 1px;
+		font-weight: bold;
+	}
+
+	.inner-health {
+		background: #78bb92;
+		border: 1px solid #d4ffe5;
+		border-radius: 0 6px 6px 0;
+		height: 6px;
+	}
+}
+
+.experience-bar {
+	position: absolute;
+	bottom: -6px;
+	right: 8px;
+	height: 4px;
+	width: 72%;
+	background: repeating-linear-gradient(
+	  to right,
+	  #837a5f,
+	  #837a5f 2px,
+	  #91804b 2px,
+	  #91804b 6px
+	);
+
+	&:before {
+		content: "EXP";
+		float: left;
+		color: #f6ba52;
+		font-size: 6px;
+		position: relative;
+		right: 20px;
+	}
+
+	.inner-experience {
+		height: 4px;
+		background: #55cdef;
+	}
+}
+
+.pokeball-icon {
+	width: 10px;
+	height: 10px;
+	border-radius: 100%;
+	background: #a28589;
+	background: linear-gradient(45deg, #a28589 0%, #a28589 100%);
+	border: 1px solid #444;
+	position: absolute;
+	left: 8px;
+	top: 32px;
+	overflow: hidden;
+
+	&:before {
+		content: "";
+		background: #dfc6c1;
+		display: block;
+		width: 9px;
+		height: 4px;
+		border-bottom: 1px solid #444;
+	}
+
+	&:after {
+		content: "";
+		background: #444;
+		width: 2px;
+		height: 2px;
+		margin: -1px;
+		display: block;
+		position: absolute;
+		top: 50%;
+		z-index: 2;
+		left: 50%;
+		border-radius: 100%;
+	}
+}
+
+.platform {
+	perspective: 1000px;
+	width: 245px;
+	height: 245px;
+
+	&:before {
+		content: "";
+		display: block;
+		width: 245px;
+		height: 245px;
+		background: #7dcf83;
+		border: 12px solid #9ae387;
+		border-radius: 100%;
+
+		transform-style: preserve-3d;
+		transform: rotateX(76deg) rotateY(0);
+		/*transform: skew();*/
+	}
+
+	img {
+		position: absolute;
+		left: 20%;
+		top: 0;
+		width: 80%;
+	}
+}

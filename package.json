@@ -1,0 +1,21 @@
+{
+  "name": "pokemon-game",
+  "version": "0.0.1",
+  "description": "A javascript pokemon game - just because",
+  "author": "George Phillips <georgepaulphillips@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "grunt": "~0.4.2"
+  },
+  "devDependencies": {
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-compass": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-cssc": "*",
+    "grunt-htmlhint": "*",
+    "matchdep": "*",
+    "grunt-contrib-jst": "^0.6.0"
+  }
+}

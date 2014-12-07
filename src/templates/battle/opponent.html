@@ -1,0 +1,17 @@
+<div class="stats-wrapper fadeIn">
+	<div class="opponent-stats">
+		<h3><%= pokemon.name() %></h3>
+		<span class="level"><%= pokemon.get("level") %></span>
+
+		<div class="health-bar">
+			<div class="inner-health" style="width: <%= pokemon.percentAlive() %>%;"></div>
+		</div>
+
+		<div class="pokeball-icon"></div>
+	</div>
+	<div class="opponent-notch"></div>
+</div>
+
+<div class="platform opponent">
+	<img src="assets/images/pokemon/front/<%= pokemon.get("number") %>.png">
+</div>

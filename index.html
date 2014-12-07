@@ -2,68 +2,26 @@
 <html>
 	<head>
 		<title>Pok&egrave;mon</title>
-		<link rel="stylesheet" href="layout.css">
-		<link rel="stylesheet" href="interface.css">
-		<link rel="stylesheet" href="animate.css">
-		<link rel="stylesheet" href="battle-screen.css">
+		<link rel="stylesheet" href="build/application.css">
 	</head>
 	<body>
 		<header>
 			<h1>Pok&egrave;mon Browser Game</h1>
 		</header>
 
-		<section class="notched">
-			<div class="game">
-				<div class="battle-screen">
-					<div class="opponent-wrapper animated bounceInLeft">
-						<div class="opponent-stats">
-							<h3>Pidgey</h3>
-							<span class="level">4</span>
-
-							<div class="health-bar">
-								<div class="inner-health" style="width: 100%"></div>
-							</div>
-
-							<div class="pokeball-icon"></div>
-						</div>
-						<div class="opponent-notch"></div>
-
-						<div class="platform opponent">
-							<img src="assets/images/pokemon/front/16.png">
-						</div>
-					</div>
-
-					<div class="player-wrapper">
-						<div class="pokemon-stats">
-							<h3>Pikachu</h3>
-							<span class="level">10</span>
-
-							<div class="health-bar">
-								<div class="inner-health" style="width: 100%"></div>
-							</div>
-							<span class="health">13/13</span>
-
-							<div class="experience-bar">
-								<div class="inner-experience" style="width: 100%"></div>
-							</div>
-						</div>
-						<div class="pokemon-notch"></div>
-
-						<div class="platform">
-							<img src="assets/images/pokemon/back/25.png">
-						</div>
-					</div>
-
-				</div>
-
-				<div class="messages animated fadeInUp">
-					Test
-				</div>
-			</div>
-		</section>
+		<div id="game">
+			<canvas id="canvas"></canvas>
+		</div>
 
 		<footer>
 			&copy; 2014 Pok&egrave;mon/Nintendo
 		</footer>
+
+		<script type="text/javascript" src="build/application.js"></script>
+		<script type="text/javascript">
+			var view = new GameView({
+				el: $("#game")
+			});
+		</script>
 	</body>
 </html>
