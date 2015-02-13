@@ -7447,12 +7447,54 @@ var BattleView = AbstractGameInterface.extend({
         initialize: function() {
             this.controls = new Controls({});
             var a = this.model = new Player({
-                x: 0,
-                y: 0
+                x: 10,
+                y: 4
             });
+            var b, c = new Image();
+            c.src = "assets/images/world.png";
+            c.onload = function() {
+                b.trigger("sprite:load");
+            };
+            var d = 184;
+            var e = 52;
+            var f = 1;
+            var g = 2;
+            var h = 3;
+            var i = 51;
+            var j = 53;
+            var k = 101;
+            var l = 102;
+            var m = 103;
+            var n = 50 * 4 - 1;
+            var o = {
+                sprite: {
+                    img: c,
+                    size: 16,
+                    gap: 1,
+                    columns: 50
+                },
+                whitelist: [ d, n + 203 ]
+            };
+            var p = new Map(_.extend(o, {
+                grid: [ [ f, g, g, g, h ], [ i, d, d, d, j ], [ i, d, d, d, j ], [ k, l, d, l, m ] ]
+            }));
+            b = new Map(_.extend(o, {
+                grid: [ [ d, d, n + 1, n + 2, n + 3, n + 4, n + 5, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d ], [ d, f, n + 51, n + 52, n + 53, n + 54, n + 55, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, d ], [ d, i, n + 101, n + 102, n + 103, n + 104, n + 105, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, j, d ], [ d, i, n + 151, n + 152, n + 153, n + 154, n + 155, d, d, d, d, d, d, d, d, d, d, e, d, d, d, d, d, d, j, d ], [ d, i, n + 201, n + 202, n + 203, n + 204, n + 205, d, d, d, d, d, d, d, d, d, d, e, d, d, d, d, d, d, j, d ], [ d, i, d, d, d, d, d, d, d, d, d, d, d, d, e, d, d, d, d, d, d, d, d, d, j, d ], [ d, i, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, j, d ], [ d, i, d, d, d, d, d, d, d, d, d, e, d, d, d, d, d, d, d, d, d, d, d, d, j, d ], [ d, i, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, e, d, d, d, d, d, d, j, d ], [ d, k, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, l, m, d ], [ d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d, d ] ],
+                doors: [ {
+                    coordinates: [ 4, 4 ],
+                    map: p,
+                    landing: [ 2, 2 ]
+                } ]
+            }));
+            p.set("doors", [ {
+                coordinates: [ 2, 3 ],
+                map: b,
+                landing: [ 4, 5 ]
+            } ]);
             this.worldView = new WorldView({
                 model: this.model,
-                game: this
+                game: this,
+                map: b
             });
         }
     });
@@ -7465,11 +7507,13 @@ var BattleView = AbstractGameInterface.extend({
         initialize: function(a) {
             _.bindAll(this, "checkControls", "redraw");
             this.game = a.game;
+            this.map = a.map;
             this.listenTo(this.model, "change:x change:y", this.redraw);
+            this.listenTo(this.map, "sprite:load", this.redraw);
             $(window).resize(this.redraw);
             this.redraw();
             this.checkControls();
-            this.checkControls = _.throttle(this.checkControls, 200);
+            this.checkControls = _.throttle(this.checkControls, 100);
         },
         checkControls: function() {
             var a = {
@@ -7477,20 +7521,32 @@ var BattleView = AbstractGameInterface.extend({
                 y: this.model.get("y")
             };
             increment = 1;
-            if (this.game.controls.pressed("right")) {
+            if (this.game.controls.pressed("right") && this.map.canMoveTo(a.x + increment, a.y)) {
                 a.x += increment;
-            }
-            if (this.game.controls.pressed("left")) {
+            } else if (this.game.controls.pressed("left") && this.map.canMoveTo(a.x - increment, a.y)) {
                 a.x -= increment;
             }
-            if (this.game.controls.pressed("down")) {
+            if (this.game.controls.pressed("down") && this.map.canMoveTo(a.x, a.y + increment)) {
                 a.y += increment;
-            }
-            if (this.game.controls.pressed("up")) {
+            } else if (this.game.controls.pressed("up") && this.map.canMoveTo(a.x, a.y - increment)) {
                 a.y -= increment;
             }
             this.model.set(a);
+            this.checkCollision();
             requestAnimationFrame(this.checkControls);
+        },
+        checkCollision: function() {
+            var a = this.map.get("doors");
+            for (var b = a.length - 1; b >= 0; b--) {
+                if (this.model.get("x") === a[b].coordinates[0] && this.model.get("y") === a[b].coordinates[1]) {
+                    this.map = a[b].map;
+                    this.model.set({
+                        x: a[b].landing[0],
+                        y: a[b].landing[1]
+                    });
+                    break;
+                }
+            }
         },
         redraw: function() {
             var a = $("#canvas"), b = a.get(0).getContext("2d"), c = $(window).width(), d = $(window).height();
@@ -7502,21 +7558,20 @@ var BattleView = AbstractGameInterface.extend({
                 3: "#ffffaa",
                 4: "#aaaaaa"
             };
-            var f = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ], [ 3, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 2, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 2, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ];
-            var g = this.model.get("x");
-            var h = this.model.get("y");
-            var i = c / 2;
-            var j = d / 2;
-            var k = c / 15;
-            for (x = 0; x < f.length; x++) {
-                for (y = 0; y < f[x].length; y++) {
-                    b.fillStyle = e[f[x][y]];
-                    b.fillRect((y - g) * k + i, (x - h) * k + j, k, k);
+            var f = this.model.get("x"), g = this.model.get("y"), h = c / 2, i = d / 2, j = c / 15;
+            this.map.draw(function(a, c, d, e) {
+                var k = (c - f) * j + h, l = (a - g) * j + i;
+                if (e) {
+                    this.drawSprite(b, e, k, l, j);
                 }
-            }
+                this.drawSprite(b, d, k, l, j);
+            }, this);
             b.fillStyle = "#000";
-            var l = k * .1;
-            b.fillRect(i, j, k, k);
+            var k = j * .1;
+            b.fillRect(h, i, j, j);
+        },
+        drawSprite: function(a, b, c, d, e) {
+            a.drawImage(b.img, b.sx, b.sy, b.size, b.size, c, d, e, e);
         }
     });
     a.WorldView = b;
@@ -9506,6 +9561,34 @@ var TypeMultipliers = {
         }
     });
 })(window);
+
+var Map = Backbone.Model.extend({
+    sprite: function(a, b) {
+        return this._sprite(this.get("grid")[a][b]);
+    },
+    _sprite: function(a) {
+        var b = this.get("sprite"), c = a % b.columns, d = Math.floor(a / b.columns);
+        return {
+            item: a,
+            img: b.img,
+            size: b.size,
+            sx: Math.floor((b.size + b.gap) * c),
+            sy: Math.floor((b.size + b.gap) * d)
+        };
+    },
+    canMoveTo: function(a, b) {
+        var c = this.get("whitelist"), d = this.get("grid");
+        return d.length > b && d[b].length > a && _.contains(c, d[b][a]);
+    },
+    draw: function(a, b) {
+        var c = this.get("grid");
+        for (x = 0; x < c.length; x++) {
+            for (y = 0; y < c[x].length; y++) {
+                a.apply(b, [ x, y, this.sprite(x, y), this._sprite(184) ]);
+            }
+        }
+    }
+});
 
 var Player = Backbone.Model.extend({
     defaults: {
