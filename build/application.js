@@ -7442,53 +7442,81 @@ var BattleView = AbstractGameInterface.extend({
 });
 
 (function(a) {
-    var b = {
-        "68": "rightKeyPressed",
-        "65": "leftKeyPressed",
-        "87": "upKeyPressed",
-        "83": "downKeyPressed"
-    };
-    var c = Backbone.View.extend({
+    var b = Backbone.View.extend({
         views: [],
         initialize: function() {
-            this.model = new Player({});
-            document.addEventListener("keydown", this.keyDown, false);
-            document.addEventListener("keyup", this.keyUp, false);
-            this.worldView = new WorldView({
-                model: this.model
+            this.controls = new Controls({});
+            var a = this.model = new Player({
+                x: 0,
+                y: 0
             });
-        },
-        keyDown: function(a) {
-            if (a.keyCode in b) {
-                var c = b[a.keyCode];
-                this.set(c, true);
-            }
-        },
-        keyUp: function(a) {
-            if (a.keyCode in b) {
-                var c = b[a.keyCode];
-                this.set(c, false);
-            }
+            this.worldView = new WorldView({
+                model: this.model,
+                game: this
+            });
         }
     });
-    a.GameView = c;
+    a.GameView = b;
 })(window);
 
 (function(a) {
-    var b = Backbone.View.extend({
+    var b = AbstractGameInterface.extend({
         events: {},
         initialize: function(a) {
+            _.bindAll(this, "checkControls", "redraw");
+            this.game = a.game;
+            this.listenTo(this.model, "change:x change:y", this.redraw);
+            $(window).resize(this.redraw);
             this.redraw();
+            this.checkControls();
+            this.checkControls = _.throttle(this.checkControls, 200);
+        },
+        checkControls: function() {
+            var a = {
+                x: this.model.get("x"),
+                y: this.model.get("y")
+            };
+            increment = 1;
+            if (this.game.controls.pressed("right")) {
+                a.x += increment;
+            }
+            if (this.game.controls.pressed("left")) {
+                a.x -= increment;
+            }
+            if (this.game.controls.pressed("down")) {
+                a.y += increment;
+            }
+            if (this.game.controls.pressed("up")) {
+                a.y -= increment;
+            }
+            this.model.set(a);
+            requestAnimationFrame(this.checkControls);
         },
         redraw: function() {
-            var a = $("#canvas"), b = a.get(0).getContext("2d"), c = $(window).width(), d = $(window).height(), e = 33;
+            var a = $("#canvas"), b = a.get(0).getContext("2d"), c = $(window).width(), d = $(window).height();
             a.attr("width", c).attr("height", d);
-            b.fillStyle = "#0000DD";
-            for (x = 0; x < c; x += e) {
-                for (y = 0; y < d; y += e) {
-                    b.fillRect(x, y, e - 1, e - 1);
+            var e = {
+                0: "#ffffff",
+                1: "#aaffff",
+                2: "#ffaaff",
+                3: "#ffffaa",
+                4: "#aaaaaa"
+            };
+            var f = [ [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ], [ 3, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 2, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 3, 0, 2, 1, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1 ], [ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1 ], [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ] ];
+            var g = this.model.get("x");
+            var h = this.model.get("y");
+            var i = c / 2;
+            var j = d / 2;
+            var k = c / 15;
+            for (x = 0; x < f.length; x++) {
+                for (y = 0; y < f[x].length; y++) {
+                    b.fillStyle = e[f[x][y]];
+                    b.fillRect((y - g) * k + i, (x - h) * k + j, k, k);
                 }
             }
+            b.fillStyle = "#000";
+            var l = k * .1;
+            b.fillRect(i, j, k, k);
         }
     });
     a.WorldView = b;
@@ -9437,6 +9465,48 @@ var TypeMultipliers = {
     }
 };
 
+(function(a) {
+    var b = {
+        "68": "rightKeyPressed",
+        "65": "leftKeyPressed",
+        "87": "upKeyPressed",
+        "83": "downKeyPressed",
+        "39": "rightKeyPressed",
+        "37": "leftKeyPressed",
+        "38": "upKeyPressed",
+        "40": "downKeyPressed"
+    };
+    a.Controls = Backbone.Model.extend({
+        initialize: function() {
+            this.resetKeys();
+            document.addEventListener("keydown", _.bind(this.keyDown, this), false);
+            document.addEventListener("keyup", _.bind(this.keyUp, this), false);
+        },
+        resetKeys: function() {
+            for (var a in b) {
+                var c = b[a];
+                this.set(c, false);
+            }
+        },
+        pressed: function(a) {
+            return this.get(a + "KeyPressed");
+        },
+        keyDown: function(a) {
+            if (a.keyCode in b) {
+                var c = b[a.keyCode];
+                this.trigger("press:" + c.replace(/KeyPressed$/, ""), this);
+                this.set(c, true);
+            }
+        },
+        keyUp: function(a) {
+            if (a.keyCode in b) {
+                var c = b[a.keyCode];
+                this.set(c, false);
+            }
+        }
+    });
+})(window);
+
 var Player = Backbone.Model.extend({
     defaults: {
         money: 0,
@@ -9536,7 +9606,7 @@ var BattleOpponentView = Backbone.View.extend({
     render: function() {
         this.$el.html(JST["battle/opponent"]({
             pokemon: new Pokemon({
-                number: 151,
+                number: 34,
                 level: 10,
                 wild: true,
                 health: 13,
@@ -9551,6 +9621,10 @@ var BattlePlayerView = Backbone.View.extend({
     tagName: "div",
     className: "player-wrapper slideInRight",
     events: {},
+    defaults: {
+        x: 5,
+        y: 5
+    },
     initialize: function() {},
     render: function() {
         this.$el.html(JST["battle/player"]({

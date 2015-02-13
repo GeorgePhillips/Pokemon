@@ -9,7 +9,7 @@ var BattleOpponentView = Backbone.View.extend({
     render: function() {
         this.$el.html(JST["battle/opponent"]({
             pokemon: new Pokemon({
-                "number": 151,
+                "number": 34,
                 "level": 10,
                 "wild": true,
                 "health": 13,

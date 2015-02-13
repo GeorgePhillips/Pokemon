@@ -1,47 +1,28 @@
 (function (App) {
-  var keys = {
-    "68": "rightKeyPressed",
-    "65": "leftKeyPressed",
-    "87": "upKeyPressed",
-    "83": "downKeyPressed"
-  };
-
   var GameView = Backbone.View.extend({
     views: [],
 
     initialize: function() {
-      this.model = new Player({});
+      this.controls = new Controls({});
 
-      document.addEventListener ('keydown', this.keyDown, false);
-      document.addEventListener ('keyup', this.keyUp, false);
+      var player = this.model = new Player({
+        x: 0,
+        y: 0
+      });
 
-      // this.worldView = new WorldView({
-      //   model: this.model
-      // });
+      this.worldView = new WorldView({
+        model: this.model,
+        game: this
+      });
 
-      console.log(this.model);
-      this.battleView = new BattleView({
-        player: this.model
-      }).render();
+      // console.log(this.model);
+      // this.battleView = new BattleView({
+      //   player: this.model,
+      //   game: this
+      // }).render();
 
-      this.battleView.$el.appendTo("#game");
-      console.log(this.battleView);
-    },
-
-    keyDown: function(e) {
-        if (e.keyCode in keys) {
-          var key = keys[e.keyCode];
-
-          this.set(key, true);
-        }
-    },
-
-    keyUp: function(e) {
-        if (e.keyCode in keys) {
-          var key = keys[e.keyCode];
-
-          this.set(key, false);
-        }
+      // this.battleView.$el.appendTo("#game");
+      // console.log(this.battleView);
     }
   });
 

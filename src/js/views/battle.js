@@ -24,6 +24,7 @@ var BattleView = AbstractGameInterface.extend({
     },
 
     render: function() {
+        
         this.$el.html(JST["battle/layout"]());
 
         this.$(".battle-screen")
