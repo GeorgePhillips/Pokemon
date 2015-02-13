@@ -15,9 +15,17 @@
       document.addEventListener ('keydown', this.keyDown, false);
       document.addEventListener ('keyup', this.keyUp, false);
 
-      this.worldView = new WorldView({
-        model: this.model
-      });
+      // this.worldView = new WorldView({
+      //   model: this.model
+      // });
+
+      console.log(this.model);
+      this.battleView = new BattleView({
+        player: this.model
+      }).render();
+
+      this.battleView.$el.appendTo("#game");
+      console.log(this.battleView);
     },
 
     keyDown: function(e) {
