@@ -7558,7 +7558,7 @@ var BattleView = AbstractGameInterface.extend({
                 3: "#ffffaa",
                 4: "#aaaaaa"
             };
-            var f = this.model.get("x"), g = this.model.get("y"), h = c / 2, i = d / 2, j = c / 15;
+            var f = this.model.get("x"), g = this.model.get("y"), h = c / 2, i = d / 2, j = 16;
             this.map.draw(function(a, c, d, e) {
                 var k = (c - f) * j + h, l = (a - g) * j + i;
                 if (e) {

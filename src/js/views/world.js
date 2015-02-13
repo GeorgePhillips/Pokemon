@@ -79,7 +79,7 @@
                 centreY = this.model.get("y"),
                 offsetX = width / 2,
                 offsetY = height / 2,
-                tileSize = width / 15;
+                tileSize = 16;
 
             this.map.draw(function (x, y, sprite, fallbackSprite) {
                 var sx = (y - centreX) * tileSize + offsetX,
